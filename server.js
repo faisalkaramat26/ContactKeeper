@@ -3,7 +3,10 @@ const connectDB = require("./config/db");
 
 const app = express();
 
-// Connect MongeDB
+//init middleware
+app.use(express.json({ extended: false }));
+
+// Connect MongoDB
 connectDB();
 
 app.get("/", (req, res) => res.json({ msg: "Welcome to the ContactKeeper" }));
