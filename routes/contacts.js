@@ -30,7 +30,7 @@ router.post(
   body("name", "Please enter name").not().isEmpty(),
   body("phone", "Please enter valid phone number")
     .isNumeric()
-    .isLength({ max: 10 }),
+    .isLength({ min: 10 }),
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -69,15 +69,58 @@ router.post(
 // @router      PUT api/auth/:id
 // @desc        Update Contact
 // @access      Private
-router.put("/:id", (req, res) => {
-  res.send("Update Contact");
+router.put("/:id", auth, async (req, res) => {
+  const { name, email, phone, type } = req.body;
+
+  // Build Contact Object
+  const contactFields = {};
+  if (name) contactFields.name = name;
+  if (email) contactFields.email = email;
+  if (phone) contactFields.phone = phone;
+  if (type) contactFields.type = type;
+
+  try {
+    let contact = await Contact.findById(req.params.id);
+
+    if (!contact) {
+      return res.status(404).json({ msg: "Contact doesnt exist" });
+    }
+
+    if (contact.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "Not Authorized" });
+    }
+
+    contact = await Contact.findByIdAndUpdate(
+      req.params.id,
+      { $set: contactFields },
+      { new: true }
+    );
+
+    res.json(contact);
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ msg: "Server Error" });
+  }
 });
 
 // @router      DELETE api/auth/:id
 // @desc        Delete Contact
 // @access      Private
-router.delete("/:id", (req, res) => {
-  res.send("Delete Contact");
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    let existingContact = await Contact.findById(req.params.id);
+
+    if (!existingContact) {
+      return res.status(404).json({ msg: "Contact not found" });
+    }
+
+    await Contact.findByIdAndRemove(req.params.id);
+
+    res.json({ msg: "Contact removed" });
+  } catch (err) {
+    res.status(500).json({ msg: "Server Error" });
+    console.log(err.message);
+  }
 });
 
 module.exports = router;
