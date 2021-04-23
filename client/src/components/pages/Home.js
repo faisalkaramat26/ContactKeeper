@@ -7,8 +7,13 @@ import AuthContext from "../../context/Auth/authContext";
 const Home = () => {
   const authContext = useContext(AuthContext);
 
+  const { isAuthenticated, loadUser } = authContext;
+
   useEffect(() => {
-    authContext.loadUser();
+    if (isAuthenticated) {
+      loadUser();
+    }
+
     // eslint-disbale-next-line
   }, []);
 

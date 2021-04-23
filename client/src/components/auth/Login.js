@@ -1,6 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import AuthContext from "../../context/Auth/authContext";
+import AlertContext from "../../context/Alert/alertContext";
 
-const Login = () => {
+const Login = (props) => {
+  const authContext = useContext(AuthContext);
+  const alertContext = useContext(AlertContext);
+
+  const { login, error, clearErrors, isAuthenticated } = authContext;
+  const { setAlert } = alertContext;
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      props.history.push("/");
+    }
+    if (error === "User already exist") {
+      setAlert(error, "danger");
+    } else {
+      clearErrors();
+    }
+    // eslint-disable-next-line
+  }, [error, isAuthenticated, props.history]);
+
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -10,7 +30,11 @@ const Login = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Submit");
+    if (email === "" || password === "") {
+      setAlert("Please enter email and password", "danger");
+    } else {
+      login({ email, password });
+    }
   };
 
   const onChange = (e) => setUser({ ...user, [e.target.name]: e.target.value });
