@@ -13,7 +13,7 @@ const Login = (props) => {
     if (isAuthenticated) {
       props.history.push("/");
     }
-    if (error === "User already exist") {
+    if (error === "Invalid Credentials") {
       setAlert(error, "danger");
     } else {
       clearErrors();

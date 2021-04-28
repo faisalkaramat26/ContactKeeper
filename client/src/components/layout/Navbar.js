@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { Fragment, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/Auth/authContext";
@@ -8,7 +8,7 @@ const Navbar = (props) => {
   const authContext = useContext(AuthContext);
   const alertContext = useContext(AlertContext);
 
-  const { error, clearErrors, isAuthenticated } = authContext;
+  const { error, clearErrors, isAuthenticated, logout, user } = authContext;
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -23,8 +23,17 @@ const Navbar = (props) => {
   }, [error, isAuthenticated, props.history]);
 
   const onClick = () => {
-    authContext.logout();
+    logout();
   };
+
+  const authLinks = (
+    <Fragment>
+      <li>Hello {user && user.name}</li>
+      <li>
+        <Link onClick={onClick}>Logout</Link>
+      </li>
+    </Fragment>
+  );
 
   return (
     <div className="navbar bg-primary">
@@ -32,23 +41,18 @@ const Navbar = (props) => {
         <i className={props.icon} /> {props.title}
       </h1>
       <ul>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
-        <li>
-          <Link to="/register">Register</Link>
-        </li>
-        <li>
-          <Link to="/login">Login</Link>
-        </li>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-        {authContext.isAuthenticated && (
+        {!authContext.isAuthenticated && (
           <li>
-            <Link onClick={onClick}>Logout</Link>
+            <Link to="/register">Register</Link>
           </li>
         )}
+        {!authContext.isAuthenticated && (
+          <li>
+            <Link to="/login">Login</Link>
+          </li>
+        )}
+
+        {authContext.isAuthenticated && authLinks}
       </ul>
     </div>
   );
