@@ -6,7 +6,7 @@ const { body, validationResult } = require("express-validator");
 const User = require("../model/User");
 const Contact = require("../model/Contact");
 
-// @router      GET api/auth
+// @router      GET api/contacts
 // @desc        Get Contacts
 // @access      Private
 router.get("/", auth, async (req, res) => {
@@ -21,7 +21,7 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// @router      POST api/auth
+// @router      POST api/contacts
 // @desc        Add Contact
 // @access      Private
 router.post(
@@ -66,7 +66,7 @@ router.post(
   }
 );
 
-// @router      PUT api/auth/:id
+// @router      PUT api/contacts/:id
 // @desc        Update Contact
 // @access      Private
 router.put("/:id", auth, async (req, res) => {
@@ -103,7 +103,7 @@ router.put("/:id", auth, async (req, res) => {
   }
 });
 
-// @router      DELETE api/auth/:id
+// @router      DELETE api/contacts/:id
 // @desc        Delete Contact
 // @access      Private
 router.delete("/:id", auth, async (req, res) => {

@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import AuthContext from "../../context/Auth/authContext";
 import AlertContext from "../../context/Alert/alertContext";
+import ContactContext from "../../context/Contact/contactContext";
 
 const Navbar = (props) => {
   const authContext = useContext(AuthContext);
   const alertContext = useContext(AlertContext);
+  const contactContext = useContext(ContactContext);
 
   const { error, clearErrors, isAuthenticated, logout, user } = authContext;
 
@@ -24,6 +26,7 @@ const Navbar = (props) => {
 
   const onClick = () => {
     logout();
+    contactContext.clearContacts();
   };
 
   const authLinks = (
