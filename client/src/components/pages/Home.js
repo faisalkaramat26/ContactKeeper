@@ -15,7 +15,7 @@ const Home = () => {
     }
 
     // eslint-disbale-next-line
-  }, []);
+  }, [isAuthenticated, loadUser]);
 
   return (
     <div className="grid-2">

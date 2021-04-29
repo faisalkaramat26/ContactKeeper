@@ -53,6 +53,7 @@ const ContactState = (props) => {
   //Delete Contact
   const deleteContact = async (id) => {
     try {
+      // eslint-disable-next-line
       const response = await axios.delete(`/api/contacts/${id}`);
       dispatch({ type: DELETE_CONTACT, payload: id });
     } catch (error) {
